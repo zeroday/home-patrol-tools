@@ -1,0 +1,5 @@
+function(doc) {
+  if (doc.length > 100000) {
+    emit(doc.title, doc.length);
+  }
+}
