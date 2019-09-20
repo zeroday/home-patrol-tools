@@ -1,0 +1,5 @@
+function(doc) {
+  if (doc.genre.indexOf("insert-your-city-here") > 0) {
+    emit(doc.genre, doc.title);
+  }
+}
