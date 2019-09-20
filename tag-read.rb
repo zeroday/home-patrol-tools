@@ -33,8 +33,7 @@ TagLib::MPEG::File.open(mp3_file) do |file|
   uri = URI.parse("http://127.0.0.1:5984/homepatrol/#{doc_id}")
   request = Net::HTTP::Put.new(uri)
   request.content_type = "application/json"
-  request.body = JSON.dump({"status": "new",
-                            "title": "#{tag.title}",
+  request.body = JSON.dump({"title": "#{tag.title}",
                             "artist": "#{tag.artist}",
                             "genre": "#{tag.genre}",
                             "year": "#{tag.year}",
