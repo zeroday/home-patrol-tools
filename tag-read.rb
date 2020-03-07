@@ -6,13 +6,18 @@ require 'taglib2'
 require 'uri'
 
 mp3_file = ARGV[0]
+# filename needs normalization to prevent issues downloading
+# in REST interface
+# e.g. "./2019-10-09_20-26-15/2019-10-09_20-39-47.wav.mp3"
+
 puts "mp3 #{mp3_file}"
 raw_data = File.open(mp3_file).read
 mp3_size = File.size?(mp3_file)
 puts "size #{mp3_size}"
 HOST = '192.168.1.241'
 base64_encoded_data = Base64.encode64(raw_data)
-f = TagLib::File.new(mp3_file) 
+f = TagLib::File.new(mp3_file)
+
 # timestamp is embedded in filename
 dot, date, filename = mp3_file.split("/")
 timestamp, wav, mp3 = filename.split(".")
@@ -28,10 +33,11 @@ puts "time: #{time}"
   #                                "content_type": "application/base64"}}}'
   #      -H "Content-Type:application/json"
 doc_id = Digest::SHA1.hexdigest base64_encoded_data
-uri = URI.parse("http://192.168.1.241/homepatrol/#{doc_id}")
+uri = URI.parse("http://192.168.1.241/test/#{doc_id}")
 request = Net::HTTP::Put.new(uri)
 request.content_type = "application/json"
-request.body = JSON.dump({"status": "new",
+request.body = JSON.dump({"attname": "#{filename}",
+                          "status": "new",
                           "title": "#{f.title}",
                           "artist": "#{f.artist}",
                           "genre": "#{f.genre}",
